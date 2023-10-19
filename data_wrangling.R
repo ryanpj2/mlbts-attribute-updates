@@ -30,7 +30,7 @@ save(combined_data, file = "combined.rda")
 
 #WRANGLING CARD DATA
 
-load("combined.rda")
+load("data/combined.rda")
 
 #filter for only Live Series batter cards, selecting att that contribute to OVR)
 live_batters_cards = combined_data %>% 
@@ -73,5 +73,13 @@ df_list = list(batter_plate_discipline_small, batter_vs_r_small, batter_vs_l_sma
 live_batters_stats = df_list %>% 
   reduce(full_join, by = "Name")
 
+live_batters_full = live_batters_cards %>% 
+  rename(Name = name) %>% 
+  inner_join(live_batters_stats, by = "Name") %>% 
+  select(Name, ovr, display_position, contact_left:batting_clutch,
+         fielding_ability:baserunning_ability)
 
-save(live_batters_stats, file = "live-batters-stats.rda")
+#find players in stats df that are not in full df after joining (one is Shohei,
+#who in game is set as a SP, and the other 6 have periods or hyphens in their name
+#in game but not in FG data. can address those issues later)
+setdiff(live_batters_stats$Name, live_batters_full$Name)
