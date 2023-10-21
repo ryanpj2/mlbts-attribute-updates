@@ -75,9 +75,10 @@ live_batters_stats = df_list %>%
 
 live_batters_full = live_batters_cards %>% 
   rename(Name = name) %>% 
-  inner_join(live_batters_stats, by = "Name") %>% 
   select(Name, ovr, display_position, contact_left:batting_clutch,
-         fielding_ability:baserunning_ability)
+         fielding_ability:baserunning_ability) %>% 
+  inner_join(live_batters_stats, by = "Name")
+  
 
 #find players in stats df that are not in full df after joining (one is Shohei,
 #who in game is set as a SP, and the other 6 have periods or hyphens in their name
